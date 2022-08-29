@@ -26,7 +26,7 @@ public class NetworkingHelpers {
     private static OkHttpClient _apiClient = null;
     private static OkHttpClient createApiClient() {
         OkHttpClient client = null;
-        OkHttpClient.Builder builder = setTimeouts(new OkHttpClient.Builder(), 60, TimeUnit.SECONDS);
+        OkHttpClient.Builder builder = setTimeouts(new OkHttpClient.Builder().addInterceptor(new LoggingInterceptor()), 60, TimeUnit.SECONDS);
 
         // Enabling support for TLSv1.1 and TLSv1.2 on Android 4.4 and below.
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
