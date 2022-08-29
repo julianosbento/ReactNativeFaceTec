@@ -1,8 +1,12 @@
 package org.gooddollar.facetec.api;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import androidx.annotation.Nullable;
+
+import com.facetec.sdk.FaceTecSDK;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -71,7 +75,7 @@ public final class FaceVerification {
   }
 
   public static void getSessionToken(final SessionTokenCallback callback) {
-    Request tokenRequest = createRequest("/verify/face/session", "post", new JSONObject());
+    Request tokenRequest = createRequest("/session-token", "get", new JSONObject());
 
     sendRequest(tokenRequest, new APICallback() {
       @Override
@@ -109,7 +113,7 @@ public final class FaceVerification {
   }
 
   public static void enroll(String enrollmentIdentifier, RequestBody customRequest, @Nullable Integer timeout, final APICallback callback) {
-    Request enrollmentRequest = createRequest("/verify/face/" + enrollmentIdentifier, "put", customRequest);
+    Request enrollmentRequest = createRequest("/enrollment-3d" + enrollmentIdentifier, "put", customRequest);
 
     sendRequest(enrollmentRequest, timeout, callback);
   }
@@ -117,10 +121,17 @@ public final class FaceVerification {
   private static Request createRequest(String url, @Nullable String method, @Nullable RequestBody body) {
     Request.Builder request = new Request.Builder()
       .url(_serverURL + url)
+      .header("X-Device-Key", "dgiWTRm5xsGgODBXetEUsNMoG3igdtE5")
+      .header("User-Agent", FaceTecSDK.createFaceTecAPIUserAgentString(""))
       .header("Content-Type", "application/json")
       .header("Authorization", "Bearer " + _jwtAccessToken);
 
+    Log.i("::::::: request ====> ", request.toString());
+
     switch (method) {
+      case "get":
+        request.get();
+        break;
       case "post":
         request.post(body);
         break;

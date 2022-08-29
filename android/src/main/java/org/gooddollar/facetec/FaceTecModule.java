@@ -2,6 +2,7 @@ package org.gooddollar.facetec;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ActivityEventListener;
@@ -143,6 +144,8 @@ public class FaceTecModule extends ReactContextBaseJavaModule {
         final Activity activity = getCurrentActivity();
         FaceTecSDKStatus status = FaceTecSDK.getStatus(activity);
 
+        Log.i("::::::: status ", status.toString());
+
         switch (status) {
             case INITIALIZED:
             case DEVICE_IN_LANDSCAPE_MODE:
@@ -160,6 +163,12 @@ public class FaceTecModule extends ReactContextBaseJavaModule {
                     FaceTecSDK.initializeInProductionMode(activity, licenseText, licenseKey, encryptionKey, onInitializationAttempt(activity, promise));
                     return;
                 }
+
+                Log.i(":::::::: activity","activity" + activity.toString());
+                Log.i(":::::::: licenseKey", "licenseKey" + licenseKey);
+                Log.i(":::::::: licenseText", "licenseText" + licenseText);
+                Log.i(":::::::: encryptionKey", "encryptionKey" + encryptionKey);
+                Log.i(":::::::: promise", "promise" + promise.toString());
 
                 FaceTecSDK.initializeInDevelopmentMode(activity, licenseKey, encryptionKey, onInitializationAttempt(activity, promise));
                 break;
@@ -194,6 +203,9 @@ public class FaceTecModule extends ReactContextBaseJavaModule {
             @Override
             public void onCompletion(final boolean successful) {
                 // the value of successful determines if the sdk has been initialized or not
+
+                Log.i("::::::: onCompletion", String.valueOf(successful));
+
                 if (successful) {
                     // status is already initialized - resolve promise with true
                     FaceTecSDK.setDynamicStrings(Customization.UITextStrings);
